@@ -64,5 +64,55 @@ set gameWin = function (wall, actor) {
 
 	set sound = game.createSound("Game/Win1").play();
 };
+
 // background
 gameLayer.createRepeatedImage("PlanetCute/Sky");
+
+// simplifications
+set random = math.random;
+set getWidth = gameLayer.getWidth;
+set getHeight = gameLayer.getHeight;
+
+set createHero = function () {
+	return gameLayer.createActor("PlanetCute/beetleship")
+		.move(200, 700)
+		.typeDynamic().hitCircle(15);	
+}
+
+set groundType = 0;
+set createGround = function () {
+	if (math.random(5) == 0) groundType = math.random(3);
+	return gameLayer.createActor("PlanetCute/" .. array {"Grass Block", "Dirt Block", "Brown Block"}[groundType])
+		.typeStatic().hitSquare(75);	
+}
+
+set createTree = function () {
+	set type = math.random(3);
+	return gameLayer.createActor("PlanetCute/" .. array {"Tree Short", "Tree Tall", "Tree Ugly"}[type])
+		.typeStatic().hitSquare();	
+}
+
+set createGem = function () {
+	set type = math.random(3);
+	set gem = gameLayer.createActor(
+	"PlanetCute/" .. array {"Gem Green", "Gem Blue", "Gem Orange"}[type], 0, 0)
+		.typeSensor().hitCircle();
+	set gem.score = array {10, 20, 30}[type];
+
+	return gem;
+}
+
+set createRock = function () {
+	return gameLayer.createActor("PlanetCute/Rock")
+		.typeSensor().hitCircle();
+}
+
+set createEnemy = function (x, y) {
+	return gameLayer.createActor("PlanetCute/Enemy Bug", x, y)
+		.typeDynamic().hitCircle().fixeRotation();
+}
+
+set createShoot = function (x, y) {
+	return gameLayer.createActor("PlanetCute/Star", x, y)
+		.typeDynamic().hitCircle();
+}
