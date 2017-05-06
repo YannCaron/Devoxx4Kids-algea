@@ -8,7 +8,7 @@ loop(50) {
 	
 	set winGem = function () {
 		score = score + gem.score;
-		gameLayer.remove(gem);
+		remove(gem);
 		game.createSound("Game/Ring2").play();
 	};
 	

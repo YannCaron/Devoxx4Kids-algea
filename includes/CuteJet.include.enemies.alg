@@ -1,24 +1,17 @@
-// enemies
-loop (25) {
-	set x = random(getWidth());
-	
-	set enemy = createEnemy(x, 100);
-	set enemy.force = 15;
-	
-	enemy.applyForceX(enemy.force);
-	
-	set contact = function (enemy, other) {
-		if (other.getName() == "PlanetCute/Star") {
-			gameLayer.remove(enemy);
-			score = score + 15;
-			game.createSound("Game/Toc1").play();
-		} elseif (!other.getName().contains("Block")) {
-			enemy.force = -enemy.force;
-			enemy.applyForceX(enemy.force);
-			enemy.flipX();
-		}
+// ennemies
+loop(20) {
+	set x = random(getWidth() - 1000) + 900;
+	set y = random(getHeight() - 150) + 100;
+
+	set enemy = createEnemy();
+	enemy.move(x, y);
+	enemy.setXVelocity(-50);
+
+	set lose = function () {
+		remove(enemy);
+		life = life - 1;
+		testGameOver();
 	}
-	
-	enemy.onContact(contact);
-	
-} 
+
+	if (exists(hero)) enemy.onContactWith(hero, lose);
+}

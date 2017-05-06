@@ -1,13 +1,11 @@
  // shoot
 set shoot = function () {
-	set x = hero.getX();
-	set y = hero.getY() - hero.getHeight() / 2;
+	set x = hero.getX() + 100;
+	set y = hero.getY();
 
 	set shoot = createShoot(x, y);
-	shoot.scale(0.5);
-	shoot.setXVelocity(hero.getXVelocity());
-	shoot.setYVelocity(-10);
-	
-	shoot.onContact((shoot) { gameLayer.remove(shoot); });
+	shoot.setXVelocity(25);
+
 }
-if (exists(hero)) hero.onPulse(shoot, 100);
+
+onKey(shoot);

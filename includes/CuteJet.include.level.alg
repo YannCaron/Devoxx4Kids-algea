@@ -8,7 +8,7 @@ loop(200) {
 
 // trees
 loop(25) {
-	set x = math.random(getWidth());
+	set x = random(getWidth());
 	set tree = createTree();
 	tree.move(x, 100);
 }

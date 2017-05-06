@@ -26,8 +26,7 @@ life.onChanged ( {lifeLabel.setText("life:: " .. life); } );
 life = 5;
 
 // gameover
-set gameOver = function (rock, actor) {
-	life--;
+set testGameOver = function () {
 	if (life == 0) {
 		set font = game.createFont("emulogic", 25, game.color.RED);
 		set over = game.createStage(0, 0);
@@ -41,13 +40,12 @@ set gameOver = function (rock, actor) {
 		set sound = game.createSound("Game/Explode1").play();
 
 	} else {
-		gameLayer.remove(rock);
-
 		set sound = game.createSound("Game/Explode1").play();
 
-		actor.onPulse({
-			actor.setAlpha(if (actor.getAlpha() == 1) 0.2 else 1)
-		}, 20, 20);
+		if (exists(hero))
+			hero.onPulse({
+				hero.setAlpha(if (hero.getAlpha() == 1) 0.2 else 1)
+			}, 20, 20);
 
 	}
 };
@@ -69,18 +67,24 @@ set gameWin = function (wall, actor) {
 gameLayer.createRepeatedImage("PlanetCute/Sky");
 
 // simplifications
-set random = math.random;
+set random = function(x) { return math.random(x + 1) };
 set getWidth = gameLayer.getWidth;
 set getHeight = gameLayer.getHeight;
+set remove = gameLayer.remove;
+set onKey = stage.onKey;
 
 set createHero = function () {
 	set hero = gameLayer.createActor("PlanetCute/beetleship")
 		.move(200, 700)
-		.typeDynamic().hitCircle(15);	
+		.typeDynamic().hitCircle(15)	
+		.fixeRotation().setMaxVelocity(20);
 
 	set hero.tell = function (msg) {
 		hero.say(font, msg);
 	}
+
+	gameLayer.follow(hero);
+
 	return hero;
 }
 
@@ -107,17 +111,27 @@ set createGem = function () {
 	return gem;
 }
 
-set createRock = function () {
-	return gameLayer.createActor("PlanetCute/Rock")
-		.typeSensor().hitCircle();
-}
-
-set createEnemy = function (x, y) {
-	return gameLayer.createActor("PlanetCute/Enemy Bug", x, y)
-		.typeDynamic().hitCircle().fixeRotation();
+set createEnemy = function () {
+	return gameLayer.createActor("PlanetCute/Enemy Bug", 100, 100)
+		.typeSensor().hitCircle()
+		.fixeRotation().flipX()
+		.setMaxVelocity(20);
 }
 
 set createShoot = function (x, y) {
-	return gameLayer.createActor("PlanetCute/Star", x, y)
-		.typeDynamic().hitCircle();
+	set shoot = gameLayer.createActor("PlanetCute/Star", x, y)
+		.typeDynamic().hitCircle().setGravityScale(0)
+		.scale(0.5);
+
+	game.createSound("Futur/Zap3").play()
+
+	shoot.onContact((self, other) {
+		if (other != hero) remove (self);
+		if (other.getName().contains("Enemy")) {
+			remove (other);
+			game.createSound("Game/Explode1").play()
+		}
+	});
+
+	return shoot;
 }
