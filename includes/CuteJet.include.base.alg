@@ -74,9 +74,14 @@ set getWidth = gameLayer.getWidth;
 set getHeight = gameLayer.getHeight;
 
 set createHero = function () {
-	return gameLayer.createActor("PlanetCute/beetleship")
+	set hero = gameLayer.createActor("PlanetCute/beetleship")
 		.move(200, 700)
 		.typeDynamic().hitCircle(15);	
+
+	set hero.tell = function (msg) {
+		hero.say(font, msg);
+	}
+	return hero;
 }
 
 set groundType = 0;

@@ -3,12 +3,7 @@
 // NE PAS MODIFIER CETTE PARTIE DU CODE
 
 include("../includes/CuteJet.include.base");
-include("../includes/CuteJet.include.level");
-include("../includes/CuteJet.include.hero");
-include("../includes/CuteJet.include.gems");
-include("../includes/CuteJet.include.rocks");
-include("../includes/CuteJet.include.enemies");
-include("../includes/CuteJet.include.shoot");
+
 
 // On commence à partir d'ici
 // A NOUS DE JOUER
@@ -16,17 +11,30 @@ include("../includes/CuteJet.include.shoot");
 // Variables utiles : score, life, hero
 
 
+set hero = createHero();
+hero.tell("Allons y!")
 
+set x = 0;
+loop(200) {
+    set ground = createGround();
+    ground.move(x, 50);
 
+    x = x + 100;
+}
 
+hero.applyForceX(25);
 
+set jump = function() {
+    hero.impulseY(15);
+}
 
-
-
-
-
-
-
+stage.onTap(jump);
+/*
+loop(25) {
+    set x = random(getWidth());
+    set tree = createTree();
+    tree.move(x, 100);
+}*/
 
 
 
