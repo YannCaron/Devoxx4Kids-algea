@@ -13,3 +13,4 @@ include("../includes/CuteJet.include.end");
 
 set music = game.createSound("Loop/Vibraphone")
 music.playLoop();
+

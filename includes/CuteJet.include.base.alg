@@ -126,10 +126,10 @@ set createShoot = function (x, y) {
 	game.createSound("Futur/Zap3").play()
 
 	shoot.onContact((self, other) {
-		if (other != hero) remove (self);
+		if (!exists(hero) || other != hero) remove (self);
 		if (other.getName().contains("Enemy")) {
 			remove (other);
-			game.createSound("Game/Explode1").play()
+			game.createSound("Game/Toc1").play()
 		}
 	});
 

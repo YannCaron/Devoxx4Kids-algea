@@ -1,6 +1,6 @@
  // shoot
 set shoot = function () {
-	set x = hero.getX() + 100;
+	set x = hero.getX() + 50;
 	set y = hero.getY();
 
 	set shoot = createShoot(x, y);
