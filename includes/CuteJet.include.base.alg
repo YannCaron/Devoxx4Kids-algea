@@ -8,6 +8,10 @@ set stage = game.createStage(0, -10);
 set gameLayer = stage.createLayer();
 set scoreLayer = stage.createLayer();
 
+set onTap = function(f) {
+	stage.onTap(f)
+}
+
 // score
 set score;
 set scoreLabel = scoreLayer.createLabel(font, score, 10, stage.getHeight() - 25);
@@ -18,12 +22,6 @@ score = 0;
 scoreLayer
 	.createButton(font, "black", "debug", stage.getWidth() - 115, stage.getHeight() - 70)
 	.onTap ({ game.setDebug(!game.getDebug()); });
-
-// life
-set life;
-set lifeLabel = scoreLayer.createLabel(font, score, 150, stage.getHeight() - 25);
-life.onChanged ( {lifeLabel.setText("life:: " .. life); } );
-life = 5;
 
 // gameover
 set testGameOver = function () {
@@ -50,6 +48,12 @@ set testGameOver = function () {
 	}
 };
 
+// life
+set life;
+set lifeLabel = scoreLayer.createLabel(font, score, 150, stage.getHeight() - 25);
+life.onChanged ( {lifeLabel.setText("life:: " .. life); testGameOver(); } );
+life = 5;
+
 set gameWin = function (wall, actor) {
 	set font = game.createFont("emulogic", 25, game.color.WHITE);
 	set over = game.createStage(0, 0);
@@ -73,11 +77,13 @@ set getHeight = gameLayer.getHeight;
 set remove = gameLayer.remove;
 set onKey = stage.onKey;
 
-set createHero = function () {
-	set hero = gameLayer.createActor("PlanetCute/beetleship")
+set createHero = function (path) {
+	set img = if (path.isNull()) "PlanetCute/beetleship" else path
+	set hero = gameLayer.createActor(img)
 		.move(200, 700)
 		.typeDynamic().hitCircle(15)	
-		.fixeRotation().setMaxVelocity(20);
+		.fixeRotation()
+		.setMaxVelocity(20);
 
 	set hero.tell = function (msg) {
 		hero.say(font, msg);
@@ -89,37 +95,47 @@ set createHero = function () {
 }
 
 set groundType = 0;
-set createGround = function () {
+set createGround = function (path) {
 	if (math.random(5) == 0) groundType = math.random(3);
+
+	//set img = if (path.isNull()) "PlanetCute/" .. array {"Grass Block", "Dirt Block", "Brown Block"}[groundType] else path
+
 	return gameLayer.createActor("PlanetCute/" .. array {"Grass Block", "Dirt Block", "Brown Block"}[groundType])
 		.typeStatic().hitSquare(75);	
 }
 
-set createTree = function () {
-	set type = math.random(3);
-	return gameLayer.createActor("PlanetCute/" .. array {"Tree Short", "Tree Tall", "Tree Ugly"}[type])
+set createTree = function (path) {
+	set img = if (path.isNull()) "PlanetCute/" .. array {"Tree Short", "Tree Tall", "Tree Ugly"}[math.random(3)] else path
+
+	return gameLayer.createActor(img)
 		.typeStatic().hitSquare();	
 }
 
-set createGem = function () {
+set createGem = function (path) {
 	set type = math.random(3);
-	set gem = gameLayer.createActor(
-	"PlanetCute/" .. array {"Gem Green", "Gem Blue", "Gem Orange"}[type], 0, 0)
+	set img = if (path.isNull()) "PlanetCute/" .. array {"Gem Green", "Gem Blue", "Gem Orange"}[type] else path
+
+	set gem = gameLayer.createActor(img)
 		.typeSensor().hitCircle();
 	set gem.score = array {10, 20, 30}[type];
 
 	return gem;
 }
 
-set createEnemy = function () {
-	return gameLayer.createActor("PlanetCute/Enemy Bug", 100, 100)
+set createEnemy = function (path) {
+	set img = if (path.isNull()) "PlanetCute/Enemy Bug" else path
+
+	return gameLayer.createActor(img)
+		.move(500, 500)
 		.typeSensor().hitCircle()
 		.fixeRotation().flipX()
-		.setMaxVelocity(20);
+		.setMaxVelocity(35);
 }
 
-set createShoot = function (x, y) {
-	set shoot = gameLayer.createActor("PlanetCute/Star", x, y)
+set createShoot = function (x, y, path) {
+	set img = if (path.isNull()) "PlanetCute/Star" else path
+
+	set shoot = gameLayer.createActor(img, x, y)
 		.typeDynamic().hitCircle().setGravityScale(0)
 		.scale(0.5);
 

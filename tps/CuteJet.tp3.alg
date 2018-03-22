@@ -13,7 +13,17 @@ include("../includes/CuteJet.include.gems");
 // -----------------------------------------------------------------------------
 // Variables utiles : score, life, hero
 
+loop(20) {
 
+}
+
+onKey({
+	set x = hero.getX() + 50
+	set y = hero.getY()
+	
+	set shoot = createShoot(x, y)
+	shoot.setXVelocity(25)
+})
 
 
 

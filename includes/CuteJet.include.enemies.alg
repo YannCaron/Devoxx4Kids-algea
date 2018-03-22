@@ -1,5 +1,5 @@
 // ennemies
-loop(20) {
+loop(50) {
 	set x = random(getWidth() - 1000) + 900;
 	set y = random(getHeight() - 150) + 100;
 
